@@ -187,7 +187,7 @@ class ZhihuSpider(scrapy.Spider):
                 #                     locations["y"] + image_size["height"]))  # defines crop points
                 #
                 # rgb_im = image.convert('RGB')
-                # rgb_im.save("D:/ImoocProjects/python_scrapy/coding-92/ArticleSpider/tools/image/yzm.jpeg",
+                # rgb_im.save("D:/ImoocProjects/python_scrapy/coding-92/ArticleSpider/spiders/image/yzm.jpeg",
                 #             'jpeg')  # saves new cropped image
                 # # 1. 通过保存base64编码
                 base64_text = english_captcha_element.get_attribute("src")

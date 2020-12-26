@@ -81,7 +81,7 @@ if __name__ == "__main__":
     # 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！
     appkey = '40d5ad41c047179fc797631e3b9c3025'
     # 图片文件
-    filename = 'D:/ImoocProjects/python_scrapy/coding-92/ArticleSpider/tools/en_captcha.gif'
+    filename = 'D:/ImoocProjects/python_scrapy/coding-92/ArticleSpider/spiders/en_captcha.gif'
     # 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html
     codetype = 5000
     # 超时时间，秒
