@@ -2,39 +2,43 @@
 
 import logging
 import os
-import time
-import datetime
+from ShopSpider.tools.LoggingFormat import MyFormatter
 
 
-class Logger(logging.Formatter):
+class Logger():
     """日志配置"""
 
     current_path = os.path.dirname(os.path.dirname(__file__))
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s %(levelname)s %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-        filename=current_path + '/ShopSpiderlog.log',
-        filemode='a'
-    )
+    def __init__(self):
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s %(levelname)s %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S',
+            filename=self.current_path + '/ShopSpiderlog.log',
+            filemode='a'
+        )
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+        console = logging.StreamHandler()
+        self.logger.addHandler(console)
 
-    def formatTime(self, record, datefmt=None):
-        ct = self.converter(record.created)
-        if datefmt:
-            s = time.strftime(datefmt, ct)
-        else:
-            s = str(datetime.datetime.now())
-        return s
+        formatter = MyFormatter(fmt='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d,%H:%M:%S.%f')
+        console.setFormatter(formatter)
 
     def get_logger(self):
-        return logging
+        return self.logger
 
     def info(self, msg):
-        logging.info(msg=msg)
+        self.logger.info(msg=msg)
 
     def error(self, msg):
-        logging.error(msg=msg)
+        self.logger.error(msg=msg)
 
     def warn(self, msg):
-        logging.warn(msg=msg)
+        self.logger.warn(msg=msg)
+
+
+if __name__ == '__main__':
+    logger = Logger()
+    logger.info("test")

@@ -2,8 +2,10 @@
 
 from selenium import webdriver
 from ShopSpider.tools.log import Logger
+from ShopSpider import settings
 import pickle
 import time
+import datetime
 import random
 import os
 
@@ -45,9 +47,9 @@ class TaoBao:
         else:
             # 打开淘宝网主页，并跳转到登录页面
             self.browser.get(self.domain)
-            time.sleep(random.randint(1, 3))
+            time.sleep(random.randint(3, 5))
             self.browser.find_element_by_xpath('//*[@id="J_SiteNavLogin"]/div[1]/div[1]/a[1]').click()
-            time.sleep(random.randint(1, 3))
+            time.sleep(random.randint(3, 5))
             self.input()
 
     def input(self):
@@ -69,7 +71,7 @@ class TaoBao:
             pwd_el.send_keys(character)
             time.sleep(0.3)
         # 模拟登录操作
-        time.sleep(random.randint(1, 3))
+        time.sleep(random.randint(1, 2))
         self.browser.find_element_by_xpath('//*[@id="login-form"]/div[4]/button').click()
         time.sleep(random.randint(3, 5))
 
@@ -88,6 +90,7 @@ class TaoBao:
         cookies = pickle.load(open(self.cookie, "rb"))
         for cookie in cookies:
             self.browser.add_cookie(cookie)
+        time.sleep(random.randint(3, 5))
         self.browser.get(self.domain)
 
     def save_cookie(self):
@@ -102,11 +105,11 @@ class TaoBao:
         """
         self.logger.ingo("登录身份验证")
         # 发送验证码
-        self.browser.find_element_by_xpath('//*[@id="J_GetCode"]').click()
-        time.sleep(random.randint(5, 10))
+        # self.browser.find_element_by_xpath('//*[@id="J_GetCode"]').click()
+        # time.sleep(random.randint(5, 10))
 
         # 输入验证码
-        # verify_code = browser.find_element_by_xpath('//*[@id="J_Phone_Checkcode"]')
+        # verify_code = self.browser.find_element_by_xpath('//*[@id="J_Phone_Checkcode"]')
         # verify_code.click()
         # time.sleep(random.randint(1, 3))
         # for character in "":
@@ -114,21 +117,25 @@ class TaoBao:
         #     time.sleep(0.3)
 
         # 模拟确定按钮
-        self.browser.find_element_by_xpath('//*[@id="submitBtn"]').click()
+        # self.browser.find_element_by_xpath('//*[@id="submitBtn"]').click()
         time.sleep(random.randint(3, 5))
 
     def good_details(self):
         """
         进入购物车页面，并全选商品
         """
+        time.sleep(random.randint(1, 3))
         # 点击购物车
-        self.logger.info("进入购物车页面")
+        self.logger.info("即将进入购物车页面")
         self.browser.find_element_by_xpath('//*[@id="mc-menu-hd"]').click()
         time.sleep(random.randint(3, 5))
 
         # 判断是否为购物车界面(可能存在cookie失效的情况，打开的是登录页面)
         if 'login.taobao.com' in self.browser.current_url:
             self.logger.ingo("cookie已失效，需重新登录")
+            # 删除已失效的cookie文件，并重新登录
+            if os.path.exists(self.cookie):
+                os.remove(self.cookie)
             self.input()
         else:
             # 全选商品
@@ -161,13 +168,20 @@ class TaoBao:
         self.browser.quit()
 
 
-# if __name__ == '__main__':
-#     try:
-#         tb = TaoBao(settings.TB_USERNAME, settings.TB_PASSWORD)
-#         tb.login()
-#         scheduler = BlockingScheduler()
-#         scheduler.add_job(tb.submit, 'cron', day_of_week='0-6', hour=21, minute=50, second=30)
-#         scheduler.start()
-#     except Exception as e:
-#         log.error("功能异常: " + e)
-#         tb.quit()
+if __name__ == '__main__':
+    """定制执行淘宝抢购功能"""
+    try:
+        while 1:
+            # 开始登录并进入购物车
+            if '19:58:00.000' in str(datetime.datetime.now()):
+                tb = TaoBao(settings.TB_USERNAME, settings.TB_PASSWORD)
+                tb.login()
+            # 整点开始下单
+            elif '20:00:00.000' in str(datetime.datetime.now()):
+                tb.submit()
+                break
+            else:
+                time.sleep(0.00001)
+    except Exception as e:
+        print("功能异常: " + e)
+        tb.quit()
