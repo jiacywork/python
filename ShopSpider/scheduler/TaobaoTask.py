@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     scheduler = TaskScheduler()
     # 添加定时登录任务
-    scheduler.add_job('taobao-login-' + str(uuid.uuid4()), tb.login, current_date + '19:58:00')
+    scheduler.add_job('taobao-login-' + str(uuid.uuid4()), tb.start, current_date + '19:58:00')
     # 添加定时提交任务
     scheduler.add_job('taobao-submit-' + str(uuid.uuid4()), tb.submit, current_date + '20:00:00')
     scheduler.start()

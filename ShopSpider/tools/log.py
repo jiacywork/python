@@ -36,7 +36,7 @@ class Logger():
         self.logger.error(msg=msg)
 
     def warn(self, msg):
-        self.logger.warn(msg=msg)
+        self.logger.warning(msg=msg)
 
 
 if __name__ == '__main__':
