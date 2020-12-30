@@ -184,7 +184,7 @@ class TaoBao:
         settle_btn = self.browser.find_element_by_xpath('//*[@id="J_SmallSubmit"]')
         while True:
             # 由于网络延迟，提前3毫秒执行(具体提前时间可通过ping测试获取)
-            if '19:59:59.997' in str(datetime.datetime.now()):
+            if '19:59:59.900' in str(datetime.datetime.now()):
                 settle_btn.click()
                 if 'buy.taobao.com' in self.browser.current_url or 'buy.tmall.com' in self.browser.current_url:
                     self.logger.info("商品已结算，开始进行订单提交")
@@ -223,7 +223,7 @@ if __name__ == '__main__':
             else:
                 time.sleep(0.5)
         # 开始执行抢购程序
-        tb = TaoBao(settings.TB_USERNAME, settings.TB_PASSWORD)
+        tb = TaoBao(username=settings.TB_USERNAME, password=settings.TB_PASSWORD)
         tb.start()
     except Exception as e:
         print("功能异常: " + str(e))
